@@ -5,6 +5,9 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using System.Data.SqlClient;
+using System.Data;
+
 
 namespace WcfShippers
 {
@@ -29,5 +32,40 @@ namespace WcfShippers
             }
             return composite;
         }
+
+        SqlConnection con = new SqlConnection("Data Source = 192.168.206.128; Initial Catalog= Northwind; User id= sa; Password = P@ssword;");
+
+        public string SearchShippers(string companyName)
+        {
+            string message = "";
+            List<string> ListcompanyName = new List<string>();
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("SELECT * FROM Shippers WHERE CompanyName = @companyName", con);
+                cmd.Parameters.AddWithValue("@companyName", companyName);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                if (dt.Rows.Count > 0)
+                {
+                    message = "Registro encontrado";
+                    for (int i=0; i<dt.Rows.Count; i++)
+                    {
+                        string name = dt.Rows[i]["CompanyName"].ToString();
+                        ListcompanyName.Add(name);
+
+                    }
+                }
+                else
+                {
+                    message = "No hubo Coincidencias";
+                }
+                con.Close();
+            }
+            return message;
+
+
+        }
+        
     }
 }

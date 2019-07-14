@@ -19,6 +19,9 @@ namespace WcfShippers
         [OperationContract]
         CompositeType GetDataUsingDataContract(CompositeType composite);
 
+        [OperationContract]
+        string SearchShippers(string companyName);
+
         // TODO: agregue aquí sus operaciones de servicio
     }
 
